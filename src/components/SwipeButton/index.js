@@ -98,6 +98,7 @@ const SwipeButton = props => {
     titleFontSize,
     titleStyles,
     width,
+    rightIcon,
   } = props;
   return (
     <View
@@ -105,28 +106,32 @@ const SwipeButton = props => {
         styles.container,
         {
           ...containerStyles,
-          backgroundColor: disabled
-            ? disabledRailBackgroundColor
-            : railBackgroundColor,
-          borderColor: railBorderColor,
-          ...(width ? { width } : {}),
+        //   backgroundColor: disabled
+        //     ? disabledRailBackgroundColor
+        //     : railBackgroundColor,
+          // borderColor: railBorderColor,
+          // ...(width ? { width } : {}),
         },
       ]}
       onLayout={onLayoutContainer}>
-      <Text
-        importantForAccessibility={
-          screenReaderEnabled ? 'no-hide-descendants' : ''
-        }
-        style={[
-          styles.title,
-          {
-            color: titleColor,
-            fontSize: titleFontSize,
-            ...titleStyles,
-          },
-        ]}>
-        {title}
-      </Text>
+      <View style={styles.row}>
+        <Text
+          importantForAccessibility={
+            screenReaderEnabled ? 'no-hide-descendants' : ''
+          }
+          style={[
+            styles.title,
+            {
+              color: titleColor,
+              fontSize: titleFontSize,
+              ...titleStyles,
+            },
+          ]}>
+          {title}
+        </Text>
+        {rightIcon && <View style={styles.icon}>{rightIcon}</View>}
+      </View>
+      
       {layoutWidth > 0 && (
         <SwipeThumb
           disabled={disabled}
@@ -161,7 +166,17 @@ const SwipeButton = props => {
 };
 
 SwipeButton.defaultProps = {
-  containerStyles: {},
+  containerStyles: {
+    shadowColor: 'rgba(0, 0, 0, 1)',
+    shadowOffset: {
+      width: 0,
+      height: -1,
+    },
+    shadowRadius: 1,
+    shadowOpacity: 1.0,
+    elevation: 5,
+    backgroundColor: '#AFAFAF',
+  },
   disabled: false,
   disabledRailBackgroundColor: DISABLED_RAIL_BACKGROUND_COLOR,
   disabledThumbIconBackgroundColor: DISABLED_THUMB_ICON_BACKGROUND_COLOR,
@@ -221,6 +236,11 @@ SwipeButton.propTypes = {
   titleFontSize: PropTypes.number,
   titleStyles: PropTypes.object,
   width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  rightIcon: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.node,
+    PropTypes.func,
+  ]),
 };
 
 export default SwipeButton;
