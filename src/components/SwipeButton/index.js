@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Text, View, AccessibilityInfo } from 'react-native';
+import { Text, View, AccessibilityInfo, ImageBackground } from 'react-native';
 
 // Components
 import SwipeThumb from '../../components/SwipeThumb';
@@ -99,6 +99,7 @@ const SwipeButton = props => {
     titleStyles,
     width,
     rightIcon,
+    backgroundImageSource
   } = props;
   return (
     <View
@@ -111,6 +112,7 @@ const SwipeButton = props => {
         //     : railBackgroundColor,
           // borderColor: railBorderColor,
           // ...(width ? { width } : {}),
+          borderColor:'transparent'
         },
       ]}
       onLayout={onLayoutContainer}>
@@ -159,6 +161,7 @@ const SwipeButton = props => {
           thumbIconImageSource={thumbIconImageSource}
           thumbIconStyles={thumbIconStyles}
           title={title}
+          backgroundImageSource={backgroundImageSource}
         />
       )}
     </View>
@@ -227,6 +230,10 @@ SwipeButton.propTypes = {
     PropTypes.func,
   ]),
   thumbIconImageSource: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
+  backgroundImageSource: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
   ]),

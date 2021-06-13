@@ -7,6 +7,7 @@ import {
   PanResponder,
   TouchableNativeFeedback,
   View,
+  ImageBackground
 } from 'react-native';
 
 // Styles
@@ -179,12 +180,13 @@ const SwipeThumb = props => {
       ...thumbIconStyles,
       height: iconSize,
       width: iconSize,
-      backgroundColor: disabled
-        ? disabledThumbIconBackgroundColor
-        : thumbIconBackgroundColor,
-      borderColor: disabled
-        ? disabledThumbIconBorderColor
-        : thumbIconBorderColor,
+      // backgroundColor: disabled
+      //   ? disabledThumbIconBackgroundColor
+      //   : thumbIconBackgroundColor,
+      // borderColor: disabled
+      //   ? disabledThumbIconBorderColor
+      //   : thumbIconBorderColor,
+      borderColor: 'transparent',
       overflow: 'hidden',
     };
 
@@ -209,6 +211,7 @@ const SwipeThumb = props => {
     railStyles,
     screenReaderEnabled,
     title,
+    backgroundImageSource
   } = props;
 
   const panStyle = {
@@ -218,7 +221,7 @@ const SwipeThumb = props => {
     ...(enableReverseSwipe ? styles.containerRTL : styles.container),
     ...railStyles,
   };
-
+  var AnimatedImage = Animated.createAnimatedComponent(ImageBackground)
   return (
     <>
       {screenReaderEnabled ? (
@@ -229,16 +232,23 @@ const SwipeThumb = props => {
           disabled={disabled}
           onPress={onSwipeSuccess}
           accessible>
-          <View style={[panStyle, { width: defaultContainerWidth }]}>
-            {renderThumbIcon()}
-          </View>
+         
+           {/* {renderThumbIcon()} */}
         </TouchableNativeFeedback>
       ) : (
-        <Animated.View 
+        <Animated.View  
+          // resizeMode="stretch"
+          // source={backgroundImageSource} 
           style={[panStyle]} {...panResponder.panHandlers}
           pointerEvents= {shouldDisableTouch ? "none" : "auto"}
         >
           {renderThumbIcon()}
+          {/* <AnimatedImage  
+            resizeMode="stretch"
+            source={backgroundImageSource} 
+            style={[panStyle, { width: defaultContainerWidth }]}>
+              
+          </AnimatedImage> */}
         </Animated.View>
       )}
     </>
@@ -281,6 +291,10 @@ SwipeThumb.propTypes = {
     PropTypes.func,
   ]),
   thumbIconImageSource: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
+  backgroundImageSource: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
   ]),
