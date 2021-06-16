@@ -15,10 +15,18 @@ import styles, { borderWidth, margin } from './styles';
 
 // Constants
 import { TRANSPARENT_COLOR } from '../../constants';
+import images from '@app/assets/images';
+import { scale, vs } from 'react-native-size-matters';
 const DEFAULT_ANIMATION_DURATION = 400;
 const RESET_AFTER_SUCCESS_DEFAULT_DELAY = 1000;
 
 const SwipeThumb = props => {
+  // console.log('props',props)
+  const [width, setWidth] = useState(30)
+  const [size, setSize] = useState( {width:0,
+    height:0})
+    const [isBG, setIsBG] = useState(false)
+    const [heightImg, setHeightImg] = useState(30)
   const paddingAndMarginsOffset = borderWidth + 2 * margin;
   const defaultContainerWidth = props.iconSize;
   const forceReset = props.forceReset;
@@ -46,7 +54,6 @@ const SwipeThumb = props => {
     }),
     [props],
   );
-
   useEffect(() => {
     Animated.timing(animatedWidth, {
       toValue: defaultWidth,
@@ -60,12 +67,15 @@ const SwipeThumb = props => {
   }, [forceReset]);
 
   function onSwipeNotMetSuccessThreshold() {
+    setIsBG(false)
+    // console.log('200')
     // Animate to initial position
     setDefaultWidth(defaultContainerWidth);
     props.onSwipeFail && props.onSwipeFail();
   }
 
   function onSwipeMetSuccessThreshold(newWidth) {
+    // console.log('100')
     if (newWidth !== maxWidth) {
       finishRemainingSwipe();
       return;
@@ -75,6 +85,9 @@ const SwipeThumb = props => {
   }
 
   function onPanResponderStart() {
+    setSize({...size, width:vs(40), height:vs(40)})
+    
+    // console.log('789')
     if (props.disabled) {
       return;
     }
@@ -82,6 +95,8 @@ const SwipeThumb = props => {
   }
 
   async function onPanResponderMove(event, gestureState) {
+    setIsBG(true)
+    // console.log('456')
     if (props.disabled) {
       return;
     }
@@ -109,6 +124,8 @@ const SwipeThumb = props => {
   }
 
   function onPanResponderRelease(event, gestureState) {
+    setSize({...size, width:0, height:0})
+    // console.log("123")
     if (props.disabled) {
       return;
     }
@@ -193,8 +210,11 @@ const SwipeThumb = props => {
     return (
       <View style={[styles.icon, { ...dynamicStyles }]}>
         {!ThumbIconComponent && thumbIconImageSource && (
-          <Image resizeMethod="resize" source={thumbIconImageSource} />
-        )}
+          <Image
+            style={size.width !== 0 ? size:{width:vs(40), height:vs(40)}}
+            resizeMode="contain"
+            resizeMethod="auto" source={thumbIconImageSource} />
+          )}
         {ThumbIconComponent && (
           <View>
             <ThumbIconComponent />
@@ -222,6 +242,7 @@ const SwipeThumb = props => {
     ...railStyles,
   };
   var AnimatedImage = Animated.createAnimatedComponent(ImageBackground)
+  console.log('widtf', width)
   return (
     <>
       {screenReaderEnabled ? (
@@ -237,18 +258,28 @@ const SwipeThumb = props => {
         </TouchableNativeFeedback>
       ) : (
         <Animated.View  
-          // resizeMode="stretch"
-          // source={backgroundImageSource} 
-          style={[panStyle]} {...panResponder.panHandlers}
+          onLayout={e=>{setWidth(e.nativeEvent.layout.width)}}
+          style={[panStyle]} 
+          {...panResponder.panHandlers}
           pointerEvents= {shouldDisableTouch ? "none" : "auto"}
         >
-          {renderThumbIcon()}
-          {/* <AnimatedImage  
-            resizeMode="stretch"
-            source={backgroundImageSource} 
-            style={[panStyle, { width: defaultContainerWidth }]}>
-              
-          </AnimatedImage> */}
+          {isBG ? (
+            <ImageBackground  
+              resizeMode= {width<166?"stretch":'cover'}
+              resizeMethod="auto"
+              source={backgroundImageSource} 
+              style={[{
+                width: width, 
+                alignItems: 'flex-end',
+                justifyContent: 'center',
+                height: vs(38),
+                overflow: 'hidden'
+              }]}
+            >
+              {renderThumbIcon()}
+            </ImageBackground>
+          )
+          : renderThumbIcon()}
         </Animated.View>
       )}
     </>
