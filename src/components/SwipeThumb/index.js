@@ -242,7 +242,7 @@ const SwipeThumb = props => {
     ...railStyles,
   };
   var AnimatedImage = Animated.createAnimatedComponent(ImageBackground)
-  console.log('widtf', width)
+  // console.log('widtf', width)
   return (
     <>
       {screenReaderEnabled ? (
